@@ -5,46 +5,52 @@ import {
   MAESTRO_ROOT_FOLDER_POSSIBILITIES,
 } from "../constant";
 import { emptyLine, log, divider } from "../utils/log";
-import { getPath, isFolderExists } from "../utils/system";
+import { getListOfFolders, getPath, isFolderExists } from "../utils/system";
 import chalk from "chalk";
+import * as stringSimilarity from "string-similarity";
 
-const checkMaestroRootFolder = (currentPath: string): string | undefined => {
+export const doctor = () => {
+  const currentPath = getPath();
   divider("Checking root folder...");
 
-  const folder = MAESTRO_ROOT_FOLDER_POSSIBILITIES.find((folder) =>
+  const maestroRootFolder = MAESTRO_ROOT_FOLDER_POSSIBILITIES.find((folder) =>
     isFolderExists(currentPath, folder)
   );
 
-  if (!folder) {
+  if (!maestroRootFolder) {
     log(
       chalk.red("🔴 Maestro root folder is missing"),
       "use maestro-fsh init command to create the folders."
     );
     return;
   } else {
-    log(chalk.green(`✅ Maestro root folder found: ${folder}`));
+    log(chalk.green(`✅ Maestro root folder found: ${maestroRootFolder}`));
   }
 
-  return folder;
-};
-
-export const doctor = () => {
-  const currentPath = getPath();
-
-  const folder = checkMaestroRootFolder(currentPath);
-  if (!folder) return;
+  if (!maestroRootFolder) return;
 
   emptyLine();
 
   let FSHMissingFolder: string[] = [];
   divider("Checking FSH folders...");
-  const maestroRootPath = `${currentPath}/${folder}`;
+  const maestroRootPath = `${currentPath}/${maestroRootFolder}`;
+
+  const folders = getListOfFolders(maestroRootPath);
 
   [FLOW_FOLDER_NAME, SUBFLOW_FOLDER_NAME, HELPER_FOLDER_NAME].forEach(
     (folder) => {
       if (!isFolderExists(maestroRootPath, folder)) {
         log(chalk.red(`🔴 The folder ${folder} is missing.`));
         FSHMissingFolder.push(folder);
+
+        const matches = stringSimilarity.findBestMatch(folder, folders);
+        if (matches.bestMatch.rating > 0.5) {
+          log(
+            chalk.yellow(
+              `Folder '${matches.bestMatch.target}' found, did you mean ${folder}?`
+            )
+          );
+        }
       } else {
         log(chalk.green(`✅ The folder ${folder} is present`));
       }
