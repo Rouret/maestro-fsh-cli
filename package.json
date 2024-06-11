@@ -1,13 +1,22 @@
 {
-  "name": "maestro-fsh",
-  "version": "1.0.0",
+  "name": "maestro-fsh-cli",
+  "version": "0.0.1",
+  "publisher": "rouret",
   "description": "",
   "author": "ROURET Lucas",
+  "main": "dist/main.js",
+  "keywords": [
+    "maestro",
+    "cli"
+  ],
+  "repository": {
+    "url": "https://github.com/Rouret/maestro-fsh-cli"
+  },
   "bin": {
     "maestro-fsh": "./dist/main.js"
   },
   "scripts": {
-    "build": "npx tsc",
+    "build": "esbuild ./src/main.ts --bundle --platform=node --outdir=dist ",
     "dev": "esbuild ./src/main.ts --bundle --platform=node --outdir=dist --watch"
   },
   "license": "MIT",

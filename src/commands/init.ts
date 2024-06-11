@@ -6,20 +6,11 @@ import {
   MAESTRO_ROOT_FOLDER_POSSIBILITIES,
   SUBFLOW_FOLDER_NAME,
   HELPER_FOLDER_NAME,
+  FSH_FOLDER_NAMES,
 } from "../constant";
 import { createFile, createFolder, getPath } from "../utils/system";
 import { emptyLine, log } from "../utils/log";
-
-const wrapperTryCatchEEXIST = (funcToExe: () => void, callBack: () => void) => {
-  try {
-    funcToExe();
-  } catch (e) {
-    //@ts-ignore
-    if (e.code !== undefined && e.code === "EEXIST") {
-      callBack();
-    }
-  }
-};
+import { wrapperTryCatchEEXIST } from "../utils/util";
 
 export const init = async () => {
   const folderName = await select({
@@ -38,16 +29,10 @@ export const init = async () => {
     () => log(chalk.yellowBright("⚠️ Maestro root folder already exists."))
   );
 
-  const foldersToCreate = [
-    FLOW_FOLDER_NAME,
-    SUBFLOW_FOLDER_NAME,
-    HELPER_FOLDER_NAME,
-  ];
-
-  foldersToCreate.forEach((folder) => {
+  FSH_FOLDER_NAMES.forEach((folderName) => {
     wrapperTryCatchEEXIST(
-      () => createFolder(`${maestroRootPath}/${folder}`),
-      () => log(chalk.yellowBright(`⚠️ ${folder} folder already exists.`))
+      () => createFolder(`${maestroRootPath}/${folderName}`),
+      () => log(chalk.yellowBright(`⚠️ ${folderName} folder already exists.`))
     );
   });
 

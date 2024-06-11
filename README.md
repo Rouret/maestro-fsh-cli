@@ -26,6 +26,16 @@ The `doctor` command checks the integrity of your Maestro project setup by verif
 $ maestro-fsh doctor
 ```
 
+### Create
+
+Create file:
+
+```bash
+$ maestro-fsh create flows fileName
+$ maestro-fsh create helpers fileName
+$ maestro-fsh create subflows fileName
+```
+
 ## Contributing
 
 ## License

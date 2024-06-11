@@ -1,8 +1,9 @@
+/src
 /node_modules
 /maestro
 /.maestro
 /e2e
-/dist
 
 .env
 .DS_Store
+tsconfig.json
