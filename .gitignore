@@ -1,3 +1,5 @@
 /node_modules
-/maestros
+/maestro
+/.maestro
+/e2e
 /dist

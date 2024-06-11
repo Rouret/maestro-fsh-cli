@@ -15,14 +15,13 @@ export const createFolder = (path: string) => {
   fs.mkdirSync(path);
 };
 
-const createFile = (
+export const createFile = (
   path: string,
   filename: string,
   extension: string,
   content: string
 ) => {
-  console.log(`${path}/${filename}.${extension}`);
-  //fs.writeFileSync(`${path}/${filename}.${extension}`, content);
+  fs.writeFileSync(`${path}/${filename}.${extension}`, content);
 };
 
 export const setFirstLetterToUpperCase = (word: string): string => {

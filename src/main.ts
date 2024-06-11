@@ -3,6 +3,7 @@
 import { Command } from "commander";
 import { doctor } from "./commands/doctor";
 import { emptyLine } from "./utils/log";
+import { init } from "./commands/init";
 
 const program = new Command();
 program
@@ -16,19 +17,7 @@ program
   .description("Check if the project is setup correctly")
   .action(doctor);
 
+program.command("init").description("Init maestro project").action(init);
+
 program.parse(process.argv);
 emptyLine();
-
-/* program.action(() => {
-  inquirer
-    .prompt([
-      {
-        type: "input",
-        name: "name",
-        message: "What's your name?",
-      },
-    ])
-    .then((answers) => {
-      console.log(chalk.green(`Hey there, ${answers.name}!`));
-    });
-}); */
