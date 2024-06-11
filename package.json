@@ -1,0 +1,24 @@
+{
+  "name": "maestro-fsh",
+  "version": "1.0.0",
+  "description": "",
+  "author": "ROURET Lucas",
+  "bin": {
+    "maestro-fsh": "./dist/main.js"
+  },
+  "scripts": {
+    "build": "npx tsc",
+    "dev": "esbuild ./src/main.ts --bundle --platform=node --outdir=dist --watch"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "chalk": "^5.3.0",
+    "commander": "^12.1.0",
+    "inquirer": "^9.2.23"
+  },
+  "devDependencies": {
+    "@types/node": "^20.14.2",
+    "esbuild": "^0.21.5",
+    "typescript": "^5.4.5"
+  }
+}
