@@ -3,6 +3,7 @@
 /maestro
 /.maestro
 /e2e
+/.github
 
 .env
 .DS_Store

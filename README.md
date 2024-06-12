@@ -1,7 +1,8 @@
-# Maestro FSH
+# Maestro FSH CLI
 
 ![NPM Downloads](https://img.shields.io/npm/dw/maestro-fsh-cli)
 ![Version](https://img.shields.io/github/package-json/v/rouret/maestro-fsh-cli)
+![CD Status](https://img.shields.io/github/actions/workflow/status/Rouret/maestro-fsh-cli/cd.yml?branch=master)
 
 The FSH (Flow, Subflow, Helper) method adds a layer of responsibility for actions performed during tests by structuring test files in a modular and reusable way.
 
