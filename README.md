@@ -1,6 +1,26 @@
 # Maestro FSH
 
+![NPM Downloads](https://img.shields.io/npm/dw/maestro-fsh-cli)
+![Version](https://img.shields.io/github/package-json/v/rouret/maestro-fsh-cli)
+
+The FSH (Flow, Subflow, Helper) method adds a layer of responsibility for actions performed during tests by structuring test files in a modular and reusable way.
+
+- **Flow:** The starting file for any test. It's the one launched with the command maestro test flow.yaml. It defines the logic of the tests using helpers and subflows.
+- **SubFlow:** A subset of a flow, allowing multiple actions to be chained together. It is used to group reusable sequences of logical actions.
+- **Helper:** Simple actions for navigation or content verification. They encapsulate atomic interactions with the application.
+
+The idea of the FSH method is to approach functional programming to improve the maintainability and reusability of tests.
+
+# An article is being written to fully understand the FSH model.
+
 ## Installation
+
+```
+npm install -g maestro-fsh-cli
+bun add global maestro-fsh-cli
+pnpm add -g maestro-fsh-cli
+yarn global add maestro-fsh-cli
+```
 
 ## Usage
 
@@ -40,4 +60,4 @@ $ maestro-fsh create subflows fileName
 
 ## License
 
-[MIT](https://choosealicense.com/licenses/mit/)
+[MIT](LICENSE.md)
