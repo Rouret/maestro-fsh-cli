@@ -21,7 +21,17 @@ export const createFile = (
   extension: string,
   content: string
 ) => {
-  fs.writeFileSync(`${path}/${filename}.${extension}`, content);
+  const filePath = `${path}/${filename}.${extension}`;
+  try {
+    fs.accessSync(filePath, fs.constants.F_OK);
+    throw new Error(`File ${filePath} already exists`);
+  } catch (e) {
+    //@ts-ignore
+    if (e.code !== "ENOENT") {
+      throw e;
+    }
+    fs.writeFileSync(`${path}/${filename}.${extension}`, content);
+  }
 };
 
 export const setFirstLetterToUpperCase = (word: string): string => {

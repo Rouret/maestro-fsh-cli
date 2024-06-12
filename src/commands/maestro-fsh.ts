@@ -59,3 +59,12 @@ export const checkConfig = (path: string): void => {
     process.exit(1);
   }
 };
+
+export const displayRecapLine = (isError: boolean, message: string) => {
+  const logMessage = isError
+    ? `${message} ${chalk.yellowBright(
+        "⚠️ already exists, no overwrite done."
+      )}`
+    : message;
+  log(logMessage);
+};

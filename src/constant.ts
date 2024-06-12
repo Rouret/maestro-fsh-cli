@@ -2,6 +2,8 @@ export const FLOW_FOLDER_NAME = "flows";
 export const SUBFLOW_FOLDER_NAME = "subflows";
 export const HELPER_FOLDER_NAME = "helpers";
 
+export const SPACE = "  ";
+
 export const FSH_FOLDER_NAMES = [
   FLOW_FOLDER_NAME,
   SUBFLOW_FOLDER_NAME,

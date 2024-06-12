@@ -1,20 +1,49 @@
-import { log } from "../utils/log";
+import { emptyLine } from "../utils/log";
 import {
   createFile,
   createFolder,
   getListOfFolders,
   getPath,
 } from "../utils/system";
-import { checkAndGetMaestroRootFolderName, checkConfig } from "./maestro-fsh";
-import chalk from "chalk";
+import {
+  checkAndGetMaestroRootFolderName,
+  checkConfig,
+  displayRecapLine,
+} from "./maestro-fsh";
 import select from "@inquirer/select";
 import inquirer from "inquirer";
 import { wrapperTryCatchEEXIST } from "../utils/util";
+import {
+  FLOW_FOLDER_NAME,
+  SUBFLOW_FOLDER_NAME,
+  HELPER_FOLDER_NAME,
+  SPACE,
+} from "../constant";
 
-const tellAndCreateFolder = async (
-  typePath: string,
-  name: string
-): Promise<void> => {
+const emptyFlowFile = [
+  "appId: your.app.id",
+  "name: FLOW_NAME",
+  "---",
+  "",
+  "- launchApp",
+].join("\n");
+const emptySubFlowFile = ["name: SUBFLOW_NAME", "---"].join("\n");
+const emptyHelperFile = ["name: HELPER_NAME", "---"].join("\n");
+
+const getContentFileByType = (type: string) => {
+  switch (type) {
+    case FLOW_FOLDER_NAME:
+      return emptyFlowFile;
+    case SUBFLOW_FOLDER_NAME:
+      return emptySubFlowFile;
+    case HELPER_FOLDER_NAME:
+      return emptyHelperFile;
+    default:
+      return "";
+  }
+};
+
+const tellFolderName = async (): Promise<string> => {
   const { folderName } = await inquirer.prompt([
     {
       type: "input",
@@ -23,61 +52,74 @@ const tellAndCreateFolder = async (
     },
   ]);
 
-  wrapperTryCatchEEXIST(
-    () => createFolder(`${typePath}/${folderName}`),
-    () => {}
-  );
-
-  createFileYaml(`${typePath}/${folderName}`, folderName, name);
-};
-
-const createFileYaml = (
-  finalPath: string,
-  folderName: string,
-  name: string
-) => {
-  wrapperTryCatchEEXIST(
-    () => createFile(finalPath, name, "yaml", ""),
-    () => log(chalk.yellowBright("⚠️ File already exists."))
-  );
-
-  log(chalk.green("Resource created successfully"));
-  log(`- ${folderName}`);
-  log(`  - ${name}.yaml`);
+  return folderName;
 };
 
 export const create = async (type: string, name: string) => {
   const path = getPath();
   checkConfig(path);
 
+  var isFolderError = false;
+  var isFileError = false;
+  var destinationFolderName = "";
+
   const maestroRootFolderName = checkAndGetMaestroRootFolderName(path);
-  const rootPath = `${path}/${maestroRootFolderName}/${type}`;
+  const typeFolderPath = `${path}/${maestroRootFolderName}/${type}`;
 
-  const foldersInType = getListOfFolders(rootPath);
+  const foldersInType = getListOfFolders(typeFolderPath);
 
-  if (foldersInType.length > 0) {
+  // if no folder, create one
+  if (foldersInType.length === 0) {
+    destinationFolderName = await tellFolderName();
+    isFolderError = wrapperTryCatchEEXIST(() =>
+      createFolder(`${typeFolderPath}/${destinationFolderName}`)
+    );
+
+    isFileError = wrapperTryCatchEEXIST(() =>
+      createFile(
+        `${typeFolderPath}/${destinationFolderName}`,
+        name,
+        "yaml",
+        getContentFileByType(type)
+      )
+    );
+  } else {
+    // Setup choices of folders
     const choices = foldersInType.map((folderName) => ({
       name: folderName,
       value: folderName,
     }));
 
     choices.push({ name: "Create new", value: "maestro-fsh-create" });
-    // select or create
-    const destinationFolderName = await select({
+
+    let destinationFolderNameTemp = await select({
       message: "Select the right folder",
       choices: choices,
     });
 
-    if (destinationFolderName === "maestro-fsh-create") {
-      await tellAndCreateFolder(rootPath, name);
+    // if user wants to create a new folder
+    if (destinationFolderNameTemp === "maestro-fsh-create") {
+      destinationFolderName = await tellFolderName();
+      isFolderError = wrapperTryCatchEEXIST(() =>
+        createFolder(`${typeFolderPath}/${destinationFolderName}`)
+      );
+    } else {
+      destinationFolderName = destinationFolderNameTemp;
     }
 
-    createFileYaml(
-      `${rootPath}/${destinationFolderName}`,
-      destinationFolderName,
-      name
+    // create file
+    isFileError = wrapperTryCatchEEXIST(() =>
+      createFile(
+        `${typeFolderPath}/${destinationFolderName}`,
+        name,
+        "yaml",
+        getContentFileByType(type)
+      )
     );
-  } else {
-    await tellAndCreateFolder(rootPath, name);
   }
+
+  emptyLine();
+  displayRecapLine(false, `- ${maestroRootFolderName}`);
+  displayRecapLine(isFolderError, `${SPACE}- ${destinationFolderName}`);
+  displayRecapLine(isFileError, `${SPACE.repeat(2)}- ${name}.yaml`);
 };

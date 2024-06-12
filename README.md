@@ -43,7 +43,7 @@ $ maestro-fsh init
 The `doctor` command checks the integrity of your Maestro project setup by verifying the existence of required folders.
 
 ```bash
-$ maestro-fsh doctor
+$ maestro-fsh-cli doctor
 ```
 
 ### Create
@@ -51,9 +51,9 @@ $ maestro-fsh doctor
 Create file:
 
 ```bash
-$ maestro-fsh create flows fileName
-$ maestro-fsh create helpers fileName
-$ maestro-fsh create subflows fileName
+$ maestro-fsh-cli create flows fileName
+$ maestro-fsh-cli create helpers fileName
+$ maestro-fsh-cli create subflows fileName
 ```
 
 ## Contributing

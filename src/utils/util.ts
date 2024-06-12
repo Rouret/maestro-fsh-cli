@@ -1,15 +1,15 @@
 export const wrapperTryCatchEEXIST = (
   funcToExe: () => void,
-  callBack: () => void
-) => {
+  callBack: () => void = () => {}
+): boolean => {
+  let isErrored = false;
   try {
     funcToExe();
   } catch (e) {
     //@ts-ignore
-    if (e.code !== undefined && e.code === "EEXIST") {
-      callBack();
-    } else {
-      console.error(e);
-    }
+    callBack();
+    isErrored = true;
   }
+
+  return isErrored;
 };
